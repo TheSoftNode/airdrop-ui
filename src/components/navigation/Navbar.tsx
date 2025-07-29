@@ -22,7 +22,7 @@ function Navbar() {
         {address ? (
           <Connected/>
         ) : (
-          <Connect className='flex gap-2 sm:gap-3 flex-col sm:flex-row items-center justify-end' width={140} />
+          <Connect className='flex gap-2 sm:gap-3 flex-col sm:flex-row items-center justify-end' width={180} />
         )}
       </div>
     </nav>

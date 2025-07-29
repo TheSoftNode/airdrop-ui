@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import ConnectRNSDomainButton from './ConnectRNSDomainButton'
 import ConnectWalletButton from './ConnectWalletButton'
 
@@ -10,7 +10,7 @@ type props = {
     width?: number
 }
 
-const Connect = ({ className, connectWalletTitle = 'Connect wallet', connectRNSTitle = "Use RNS domain", width = 250 }: props) => {
+const Connect = ({ className, connectWalletTitle = 'Connect wallet', connectRNSTitle = "Use RNS domain", width = 200 }: props) => {
     return (
         <div className={className}>
             <ConnectWalletButton title={connectWalletTitle} width={width} />
