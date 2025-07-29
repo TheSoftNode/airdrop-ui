@@ -9,14 +9,22 @@ function Navbar() {
   const { address } = useAuth();
 
   return (
-    <nav className="w-full p-6 flex justify-between z-10 fixed bg-black border-b border-zinc-600">
-      <Image src={logo.src} alt="logo" style={{ width: 'auto', height: 'auto' }} width={170} height={100} />
-      {address ? (
-        <Connected/>
-      ) : (
-        <Connect className='flex gap-3 flex-row w-full items-center justify-end' width={180} />
-      )
-      }
+    <nav className="w-full px-3 py-4 sm:p-6 flex justify-between items-center z-10 fixed bg-black border-b border-zinc-600">
+      <Image 
+        src={logo.src} 
+        alt="logo" 
+        style={{ width: 'auto', height: 'auto' }} 
+        width={170} 
+        height={100}
+        className="h-8 sm:h-auto w-auto flex-shrink-0"
+      />
+      <div className="flex-shrink-0">
+        {address ? (
+          <Connected/>
+        ) : (
+          <Connect className='flex gap-2 sm:gap-3 flex-col sm:flex-row items-center justify-end' width={140} />
+        )}
+      </div>
     </nav>
   )
 }
