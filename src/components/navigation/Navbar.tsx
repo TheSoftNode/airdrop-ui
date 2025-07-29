@@ -9,7 +9,7 @@ function Navbar() {
   const { address } = useAuth();
 
   return (
-    <nav className="w-full px-3 py-4 sm:p-6 flex justify-between items-center z-10 fixed bg-black border-b border-zinc-600">
+    <nav className="w-full px-3 py-4 sm:p-6 flex justify-between items-center z-50 fixed bg-black border-b border-zinc-600">
       <Image 
         src={logo.src} 
         alt="logo" 
