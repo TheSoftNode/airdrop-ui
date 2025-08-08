@@ -11,32 +11,44 @@ function AirdropContainer() {
 
   const { getAllAirdrops } = useAirdrop();
   const { provider, airdropLoading, airdrops } = useAuth();
+  
   useEffect(() => {
     getAllAirdrops();
   }, [provider, getAllAirdrops]);
 
   return (
-    <div className="lg:w-[90%] xl:w-[1300px] m-auto mt-[90px]">
+    <div className="w-full max-w-7xl mx-auto mt-16 sm:mt-20 lg:mt-24 px-4 sm:px-6 lg:px-8">
       <Filters />
-      <div className='mt-16 flex flex-wrap gap-6'>
+      
+      <div className='mt-8 sm:mt-12 lg:mt-16'>
         {airdropLoading ? (
-          <CardLoader />
-        ) :
-          airdrops?.map((air, i) => 
-            <AirdropItem
-              airdrop={air}
-              key={i}
-              background={`${colors[i % colors.length]}`}
-            />
-          )
-        }
-        {
-          (airdrops?.length === 0 && !airdropLoading) && (
-            <div className='w-full flex justify-center mt-10'>
-              <span className='text-6xl italic text-zinc-800'>No AirDrops</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <CardLoader />
+          </div>
+        ) : (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8'>
+            {airdrops?.map((air, i) => 
+              <AirdropItem
+                airdrop={air}
+                key={i}
+                background={`${colors[i % colors.length]}`}
+              />
+            )}
+          </div>
+        )}
+        
+        {(airdrops?.length === 0 && !airdropLoading) && (
+          <div className='w-full flex flex-col items-center justify-center mt-16 sm:mt-20 py-12'>
+            <div className="text-center space-y-4">
+              <div className="text-4xl sm:text-5xl lg:text-6xl italic text-zinc-700 font-light">
+                No Airdrops
+              </div>
+              <p className="text-zinc-500 text-sm sm:text-base max-w-md mx-auto">
+                There are currently no airdrops available. Check back later for new opportunities.
+              </p>
             </div>
-          )
-        }
+          </div>
+        )}
       </div>
     </div>
   )

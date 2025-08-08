@@ -1,8 +1,19 @@
 import React from 'react'
 
-function WorldIcon() {
+interface WorldIconProps {
+  className?: string;
+}
+
+function WorldIcon({ className }: WorldIconProps) {
   return (
-    <svg width="360" height="359" viewBox="0 0 360 359" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg 
+      width="360" 
+      height="359" 
+      viewBox="0 0 360 359" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
       <g clipPath="url(#clip0_10_30)">
         <path d="M180 358.605C279.21 358.605 359.636 278.41 359.636 179.484C359.636 80.5584 279.21 0.363281 180 0.363281C80.79 0.363281 0.36438 80.5584 0.36438 179.484C0.36438 278.41 80.79 358.605 180 358.605Z" fill="black"/>
         <path d="M192.301 358.191C192.301 358.191 203.487 353.591 203.487 241.453C203.487 118.365 180.969 14.4241 180.969 14.4241C180.969 14.4241 252.619 96.5726 252.619 238.125C252.619 337.292 220.708 353.984 220.708 353.984" stroke="#FF71E1" strokeMiterlimit="10"/>

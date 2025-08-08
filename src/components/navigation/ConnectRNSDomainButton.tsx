@@ -25,9 +25,11 @@ const ConnectRNSDomainButton = ({ title = 'Use RNS domain', width = 200 }: props
         outline
         onClick={() => setDialog(true)}
         width={width}
+        className="min-w-0 text-xs sm:text-sm whitespace-nowrap"
       >
-        <span className='flex justify-center items-center'>
-          <RifIcon className="w-5 mr-2" /> { title }
+        <span className='flex justify-center items-center gap-1 sm:gap-2'>
+          <RifIcon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+          <span className="truncate">{title}</span>
         </span>
       </Button>
     </>
