@@ -22,6 +22,8 @@ import {
 
 import AirdropAdminAbi from '@/utils/abi/AirdropManager.json'
 import axios from 'axios'
+import { parseContractError } from '@/types/errors'
+import { toast, transactionToasts } from '@/utils/toast'
 
 const useAirdrop = () => {
   const RPC_PROVIDER = new ethers.JsonRpcProvider(
@@ -123,29 +125,49 @@ const useAirdrop = () => {
   }, [initializeProvider, setAirdropLoading, setIsAdmin, address, setAirdrops])
 
   const removeAirdrop = async (airdropAddress: string) => {
+    let toastId: string | number | undefined
     try {
       setIsLoading(FETCH_STATUS.WAIT_WALLET)
+      toastId = toast.loading('Waiting for wallet confirmation...')
+
       const response = await airdropManager?.removeAirdrop(airdropAddress)
+
       setIsLoading(FETCH_STATUS.WAIT_TX)
       setTx(response)
+      toast.loading('Transaction pending...', { id: toastId })
+
       await response?.wait()
-      // await new Promise((resolve, reject) => setTimeout(() => resolve(''), 3000));
+
       setIsLoading(FETCH_STATUS.COMPLETED)
-    } catch (error) {
+      toast.success('Airdrop removed successfully', { id: toastId })
+    } catch (error: any) {
       console.log('error: ', error)
+      setIsLoading(FETCH_STATUS.ERROR)
+      const appError = parseContractError(error)
+      toast.error(appError.userMessage, { id: toastId })
     }
   }
   const addAirdrop = async (address: string) => {
+    let toastId: string | number | undefined
     try {
       setIsLoading(FETCH_STATUS.WAIT_WALLET)
+      toastId = toast.loading('Waiting for wallet confirmation...')
+
       const response = await airdropManager?.addAirdrop(address)
+
       setIsLoading(FETCH_STATUS.WAIT_TX)
       setTx(response)
+      toast.loading('Adding airdrop...', { id: toastId })
+
       await response?.wait()
+
       setIsLoading(FETCH_STATUS.COMPLETED)
-    } catch (error) {
+      toast.success('Airdrop added successfully', { id: toastId })
+    } catch (error: any) {
       console.log('error: ', error)
       setIsLoading(FETCH_STATUS.ERROR)
+      const appError = parseContractError(error)
+      toast.error(appError.userMessage, { id: toastId })
     }
   }
 
@@ -156,29 +178,41 @@ const useAirdrop = () => {
     proof: string[] = [],
     gasless: boolean = false
   ) => {
+    let toastId: string | number | undefined
     try {
       if (domain) {
         setIsLoading(FETCH_STATUS.WAIT_SPONSOR)
+        toastId = toast.loading('Preparing gasless claim with RNS...')
         await claimWithRNSDomain(airdropAddress, amount, proof)
       } else if (gasless) {
         setIsLoading(FETCH_STATUS.WAIT_SPONSOR)
+        toastId = toast.loading('Preparing gasless transaction...')
         await claimGasless(airdropAddress, amount, proof)
       } else {
         setIsLoading(FETCH_STATUS.WAIT_WALLET)
+        toastId = toast.loading('Waiting for wallet confirmation...')
+
         const response = await airdropManager?.claim(
           airdropAddress,
           address,
           amount,
           proof
         )
+
         setIsLoading(FETCH_STATUS.WAIT_TX)
         setTx(response)
+        toast.loading('Claiming airdrop...', { id: toastId })
+
         await response?.wait()
+
         setIsLoading(FETCH_STATUS.COMPLETED)
+        toast.success('Airdrop claimed successfully! 🎉', { id: toastId })
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('error: ', error)
       setIsLoading(FETCH_STATUS.ERROR)
+      const appError = parseContractError(error)
+      toast.error(appError.userMessage, { id: toastId })
     }
   }
   const claimWithRNSDomain = async (
@@ -306,8 +340,12 @@ const useAirdrop = () => {
       }
       console.log('\x1b[33m%s\x1b[0m', `Transaction Receipt: `, userOpsReceipt)
       setIsLoading(FETCH_STATUS.COMPLETED)
-    } catch (error) {
+      toast.success('Gasless claim successful! 🎉')
+    } catch (error: any) {
       console.log('error: ', error)
+      setIsLoading(FETCH_STATUS.ERROR)
+      const appError = parseContractError(error)
+      toast.error(appError.userMessage)
     }
   }
 
@@ -317,19 +355,29 @@ const useAirdrop = () => {
     airdropAddress: string,
     walletAddress: string
   ) => {
+    let toastId: string | number | undefined
     try {
       setIsLoading(FETCH_STATUS.WAIT_WALLET)
+      toastId = toast.loading('Waiting for wallet confirmation...')
+
       const response = await airdropManager?.allowAddress(
         airdropAddress,
         walletAddress
       )
+
       setTx(response)
       setIsLoading(FETCH_STATUS.WAIT_TX)
+      toast.loading('Whitelisting address...', { id: toastId })
+
       await response?.wait()
+
       setIsLoading(FETCH_STATUS.COMPLETED)
-    } catch (error) {
+      toast.success('Address whitelisted successfully', { id: toastId })
+    } catch (error: any) {
       console.log('error: ', error)
       setIsLoading(FETCH_STATUS.ERROR)
+      const appError = parseContractError(error)
+      toast.error(appError.userMessage, { id: toastId })
     }
   }
   return {

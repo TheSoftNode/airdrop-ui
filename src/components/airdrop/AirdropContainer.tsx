@@ -2,7 +2,7 @@
 import AirdropItem from './AirdropItem'
 import useAirdrop from '@/hooks/useAirdrop'
 import Filters from './Filters';
-import CardLoader from '../loader/CardLoader';
+import AirdropCardSkeleton from '../loader/AirdropCardSkeleton';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect } from 'react';
 
@@ -22,12 +22,14 @@ function AirdropContainer() {
       
       <div className='mt-8 sm:mt-12 lg:mt-16'>
         {airdropLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <CardLoader />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {[...Array(6)].map((_, i) => (
+              <AirdropCardSkeleton key={i} />
+            ))}
           </div>
         ) : (
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8'>
-            {airdrops?.map((air, i) => 
+            {airdrops?.map((air, i) =>
               <AirdropItem
                 airdrop={air}
                 key={i}
