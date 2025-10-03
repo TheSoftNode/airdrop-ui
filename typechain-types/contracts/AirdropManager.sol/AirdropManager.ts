@@ -59,8 +59,10 @@ export interface AirdropManagerInterface extends Interface {
       | "allowAddress"
       | "allowAddresses"
       | "claim"
+      | "claimCustom"
       | "disallowAddress"
       | "disallowAddresses"
+      | "getAdminCount"
       | "getAirdropAmountLeft"
       | "getAirdropInfo"
       | "getAirdrops"
@@ -72,13 +74,24 @@ export interface AirdropManagerInterface extends Interface {
       | "hasExpired"
       | "isAdmin"
       | "isAllowed"
+      | "owner"
       | "removeAdmin"
       | "removeAirdrop"
+      | "renounceOwnership"
       | "setRoot"
+      | "transferAdminOwnership"
+      | "transferOwnership"
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic: "AirdropAdded" | "AirdropRemoved"
+    nameOrSignatureOrTopic:
+      | "AddressAllowedByManager"
+      | "AddressDisallowedByManager"
+      | "AdminAdded"
+      | "AdminRemoved"
+      | "AirdropAdded"
+      | "AirdropRemoved"
+      | "OwnershipTransferred"
   ): EventFragment;
 
   encodeFunctionData(
@@ -102,12 +115,20 @@ export interface AirdropManagerInterface extends Interface {
     values: [AddressLike, AddressLike, BigNumberish, BytesLike[]]
   ): string;
   encodeFunctionData(
+    functionFragment: "claimCustom",
+    values: [AddressLike, AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "disallowAddress",
     values: [AddressLike, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "disallowAddresses",
     values: [AddressLike, AddressLike[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAdminCount",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getAirdropAmountLeft",
@@ -153,6 +174,7 @@ export interface AirdropManagerInterface extends Interface {
     functionFragment: "isAllowed",
     values: [AddressLike, AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "removeAdmin",
     values: [AddressLike]
@@ -162,8 +184,20 @@ export interface AirdropManagerInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "setRoot",
     values: [AddressLike, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferAdminOwnership",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
   ): string;
 
   decodeFunctionResult(functionFragment: "addAdmin", data: BytesLike): Result;
@@ -178,11 +212,19 @@ export interface AirdropManagerInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "claimCustom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "disallowAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "disallowAddresses",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAdminCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -214,6 +256,7 @@ export interface AirdropManagerInterface extends Interface {
   decodeFunctionResult(functionFragment: "hasExpired", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isAdmin", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isAllowed", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removeAdmin",
     data: BytesLike
@@ -222,7 +265,89 @@ export interface AirdropManagerInterface extends Interface {
     functionFragment: "removeAirdrop",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "setRoot", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferAdminOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+}
+
+export namespace AddressAllowedByManagerEvent {
+  export type InputTuple = [
+    airdropAddress: AddressLike,
+    user: AddressLike,
+    allowedBy: AddressLike
+  ];
+  export type OutputTuple = [
+    airdropAddress: string,
+    user: string,
+    allowedBy: string
+  ];
+  export interface OutputObject {
+    airdropAddress: string;
+    user: string;
+    allowedBy: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace AddressDisallowedByManagerEvent {
+  export type InputTuple = [
+    airdropAddress: AddressLike,
+    user: AddressLike,
+    disallowedBy: AddressLike
+  ];
+  export type OutputTuple = [
+    airdropAddress: string,
+    user: string,
+    disallowedBy: string
+  ];
+  export interface OutputObject {
+    airdropAddress: string;
+    user: string;
+    disallowedBy: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace AdminAddedEvent {
+  export type InputTuple = [admin: AddressLike, addedBy: AddressLike];
+  export type OutputTuple = [admin: string, addedBy: string];
+  export interface OutputObject {
+    admin: string;
+    addedBy: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace AdminRemovedEvent {
+  export type InputTuple = [admin: AddressLike, removedBy: AddressLike];
+  export type OutputTuple = [admin: string, removedBy: string];
+  export interface OutputObject {
+    admin: string;
+    removedBy: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace AirdropAddedEvent {
@@ -242,6 +367,19 @@ export namespace AirdropRemovedEvent {
   export type OutputTuple = [airdropAddress: string];
   export interface OutputObject {
     airdropAddress: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -323,6 +461,12 @@ export interface AirdropManager extends BaseContract {
     "nonpayable"
   >;
 
+  claimCustom: TypedContractMethod<
+    [airdropAddress: AddressLike, user: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
   disallowAddress: TypedContractMethod<
     [airdropAddress: AddressLike, user: AddressLike],
     [void],
@@ -334,6 +478,8 @@ export interface AirdropManager extends BaseContract {
     [void],
     "nonpayable"
   >;
+
+  getAdminCount: TypedContractMethod<[], [bigint], "view">;
 
   getAirdropAmountLeft: TypedContractMethod<
     [airdropAddress: AddressLike],
@@ -393,6 +539,8 @@ export interface AirdropManager extends BaseContract {
     "view"
   >;
 
+  owner: TypedContractMethod<[], [string], "view">;
+
   removeAdmin: TypedContractMethod<[_admin: AddressLike], [void], "nonpayable">;
 
   removeAirdrop: TypedContractMethod<
@@ -401,8 +549,22 @@ export interface AirdropManager extends BaseContract {
     "nonpayable"
   >;
 
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
   setRoot: TypedContractMethod<
     [airdropAddress: AddressLike, _root: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+
+  transferAdminOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -448,6 +610,13 @@ export interface AirdropManager extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "claimCustom"
+  ): TypedContractMethod<
+    [airdropAddress: AddressLike, user: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "disallowAddress"
   ): TypedContractMethod<
     [airdropAddress: AddressLike, user: AddressLike],
@@ -461,6 +630,9 @@ export interface AirdropManager extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "getAdminCount"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "getAirdropAmountLeft"
   ): TypedContractMethod<[airdropAddress: AddressLike], [bigint], "view">;
@@ -507,11 +679,17 @@ export interface AirdropManager extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "owner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "removeAdmin"
   ): TypedContractMethod<[_admin: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "removeAirdrop"
   ): TypedContractMethod<[airdropAddress: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "renounceOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "setRoot"
   ): TypedContractMethod<
@@ -519,7 +697,41 @@ export interface AirdropManager extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "transferAdminOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
 
+  getEvent(
+    key: "AddressAllowedByManager"
+  ): TypedContractEvent<
+    AddressAllowedByManagerEvent.InputTuple,
+    AddressAllowedByManagerEvent.OutputTuple,
+    AddressAllowedByManagerEvent.OutputObject
+  >;
+  getEvent(
+    key: "AddressDisallowedByManager"
+  ): TypedContractEvent<
+    AddressDisallowedByManagerEvent.InputTuple,
+    AddressDisallowedByManagerEvent.OutputTuple,
+    AddressDisallowedByManagerEvent.OutputObject
+  >;
+  getEvent(
+    key: "AdminAdded"
+  ): TypedContractEvent<
+    AdminAddedEvent.InputTuple,
+    AdminAddedEvent.OutputTuple,
+    AdminAddedEvent.OutputObject
+  >;
+  getEvent(
+    key: "AdminRemoved"
+  ): TypedContractEvent<
+    AdminRemovedEvent.InputTuple,
+    AdminRemovedEvent.OutputTuple,
+    AdminRemovedEvent.OutputObject
+  >;
   getEvent(
     key: "AirdropAdded"
   ): TypedContractEvent<
@@ -534,8 +746,59 @@ export interface AirdropManager extends BaseContract {
     AirdropRemovedEvent.OutputTuple,
     AirdropRemovedEvent.OutputObject
   >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
+  >;
 
   filters: {
+    "AddressAllowedByManager(address,address,address)": TypedContractEvent<
+      AddressAllowedByManagerEvent.InputTuple,
+      AddressAllowedByManagerEvent.OutputTuple,
+      AddressAllowedByManagerEvent.OutputObject
+    >;
+    AddressAllowedByManager: TypedContractEvent<
+      AddressAllowedByManagerEvent.InputTuple,
+      AddressAllowedByManagerEvent.OutputTuple,
+      AddressAllowedByManagerEvent.OutputObject
+    >;
+
+    "AddressDisallowedByManager(address,address,address)": TypedContractEvent<
+      AddressDisallowedByManagerEvent.InputTuple,
+      AddressDisallowedByManagerEvent.OutputTuple,
+      AddressDisallowedByManagerEvent.OutputObject
+    >;
+    AddressDisallowedByManager: TypedContractEvent<
+      AddressDisallowedByManagerEvent.InputTuple,
+      AddressDisallowedByManagerEvent.OutputTuple,
+      AddressDisallowedByManagerEvent.OutputObject
+    >;
+
+    "AdminAdded(address,address)": TypedContractEvent<
+      AdminAddedEvent.InputTuple,
+      AdminAddedEvent.OutputTuple,
+      AdminAddedEvent.OutputObject
+    >;
+    AdminAdded: TypedContractEvent<
+      AdminAddedEvent.InputTuple,
+      AdminAddedEvent.OutputTuple,
+      AdminAddedEvent.OutputObject
+    >;
+
+    "AdminRemoved(address,address)": TypedContractEvent<
+      AdminRemovedEvent.InputTuple,
+      AdminRemovedEvent.OutputTuple,
+      AdminRemovedEvent.OutputObject
+    >;
+    AdminRemoved: TypedContractEvent<
+      AdminRemovedEvent.InputTuple,
+      AdminRemovedEvent.OutputTuple,
+      AdminRemovedEvent.OutputObject
+    >;
+
     "AirdropAdded(address)": TypedContractEvent<
       AirdropAddedEvent.InputTuple,
       AirdropAddedEvent.OutputTuple,
@@ -556,6 +819,17 @@ export interface AirdropManager extends BaseContract {
       AirdropRemovedEvent.InputTuple,
       AirdropRemovedEvent.OutputTuple,
       AirdropRemovedEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
     >;
   };
 }

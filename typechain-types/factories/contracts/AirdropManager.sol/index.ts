@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export { AirdropManager__factory } from "./AirdropManager__factory";
-export { IAirdrop1155__factory } from "./IAirdrop1155__factory";
+export { ICustomAirdrop__factory } from "./ICustomAirdrop__factory";
+export { IMerkleAirdrop__factory } from "./IMerkleAirdrop__factory";

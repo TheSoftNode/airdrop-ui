@@ -62,6 +62,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Math__factory>;
     getContractFactory(
+      name: "Pausable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Pausable__factory>;
+    getContractFactory(
+      name: "ReentrancyGuard",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ReentrancyGuard__factory>;
+    getContractFactory(
       name: "Administrable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Administrable__factory>;
@@ -70,9 +78,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AirdropManager__factory>;
     getContractFactory(
-      name: "IAirdrop1155",
+      name: "ICustomAirdrop",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IAirdrop1155__factory>;
+    ): Promise<Contracts.ICustomAirdrop__factory>;
+    getContractFactory(
+      name: "IMerkleAirdrop",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IMerkleAirdrop__factory>;
     getContractFactory(
       name: "CustomAirdrop1155",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -155,6 +167,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Math>;
     getContractAt(
+      name: "Pausable",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Pausable>;
+    getContractAt(
+      name: "ReentrancyGuard",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ReentrancyGuard>;
+    getContractAt(
       name: "Administrable",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -165,10 +187,15 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.AirdropManager>;
     getContractAt(
-      name: "IAirdrop1155",
+      name: "ICustomAirdrop",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.IAirdrop1155>;
+    ): Promise<Contracts.ICustomAirdrop>;
+    getContractAt(
+      name: "IMerkleAirdrop",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IMerkleAirdrop>;
     getContractAt(
       name: "CustomAirdrop1155",
       address: string | ethers.Addressable,
@@ -244,6 +271,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Math>;
     deployContract(
+      name: "Pausable",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Pausable>;
+    deployContract(
+      name: "ReentrancyGuard",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ReentrancyGuard>;
+    deployContract(
       name: "Administrable",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Administrable>;
@@ -252,9 +287,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AirdropManager>;
     deployContract(
-      name: "IAirdrop1155",
+      name: "ICustomAirdrop",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IAirdrop1155>;
+    ): Promise<Contracts.ICustomAirdrop>;
+    deployContract(
+      name: "IMerkleAirdrop",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IMerkleAirdrop>;
     deployContract(
       name: "CustomAirdrop1155",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -337,6 +376,16 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Math>;
     deployContract(
+      name: "Pausable",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Pausable>;
+    deployContract(
+      name: "ReentrancyGuard",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ReentrancyGuard>;
+    deployContract(
       name: "Administrable",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -347,10 +396,15 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.AirdropManager>;
     deployContract(
-      name: "IAirdrop1155",
+      name: "ICustomAirdrop",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.IAirdrop1155>;
+    ): Promise<Contracts.ICustomAirdrop>;
+    deployContract(
+      name: "IMerkleAirdrop",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IMerkleAirdrop>;
     deployContract(
       name: "CustomAirdrop1155",
       args: any[],

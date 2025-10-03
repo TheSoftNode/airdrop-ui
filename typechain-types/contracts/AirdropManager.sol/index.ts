@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { AirdropManager } from "./AirdropManager";
-export type { IAirdrop1155 } from "./IAirdrop1155";
+export type { ICustomAirdrop } from "./ICustomAirdrop";
+export type { IMerkleAirdrop } from "./IMerkleAirdrop";

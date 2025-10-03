@@ -66,14 +66,26 @@ export interface CustomAirdrop1155MerkleInterface extends Interface {
       | "hasExpired"
       | "onERC1155Received"
       | "owner"
+      | "pause"
+      | "paused"
+      | "reclaimUnclaimedTokens"
       | "renounceOwnership"
       | "root"
       | "setRoot"
       | "transferOwnership"
+      | "unpause"
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic: "Claim" | "OwnershipTransferred"
+    nameOrSignatureOrTopic:
+      | "AirdropPaused"
+      | "AirdropUnpaused"
+      | "Claim"
+      | "MerkleRootUpdated"
+      | "OwnershipTransferred"
+      | "Paused"
+      | "TokensReclaimed"
+      | "Unpaused"
   ): EventFragment;
 
   encodeFunctionData(
@@ -121,6 +133,12 @@ export interface CustomAirdrop1155MerkleInterface extends Interface {
     values: [AddressLike, AddressLike, BigNumberish, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "reclaimUnclaimedTokens",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -131,6 +149,7 @@ export interface CustomAirdrop1155MerkleInterface extends Interface {
     functionFragment: "transferOwnership",
     values: [AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(
@@ -165,6 +184,12 @@ export interface CustomAirdrop1155MerkleInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "reclaimUnclaimedTokens",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -175,6 +200,31 @@ export interface CustomAirdrop1155MerkleInterface extends Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
+}
+
+export namespace AirdropPausedEvent {
+  export type InputTuple = [pausedBy: AddressLike];
+  export type OutputTuple = [pausedBy: string];
+  export interface OutputObject {
+    pausedBy: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace AirdropUnpausedEvent {
+  export type InputTuple = [unpausedBy: AddressLike];
+  export type OutputTuple = [unpausedBy: string];
+  export interface OutputObject {
+    unpausedBy: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace ClaimEvent {
@@ -190,12 +240,70 @@ export namespace ClaimEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace MerkleRootUpdatedEvent {
+  export type InputTuple = [newRoot: BytesLike];
+  export type OutputTuple = [newRoot: string];
+  export interface OutputObject {
+    newRoot: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace OwnershipTransferredEvent {
   export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
   export type OutputTuple = [previousOwner: string, newOwner: string];
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PausedEvent {
+  export type InputTuple = [account: AddressLike];
+  export type OutputTuple = [account: string];
+  export interface OutputObject {
+    account: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace TokensReclaimedEvent {
+  export type InputTuple = [
+    owner: AddressLike,
+    amount: BigNumberish,
+    reclaimDate: BigNumberish
+  ];
+  export type OutputTuple = [
+    owner: string,
+    amount: bigint,
+    reclaimDate: bigint
+  ];
+  export interface OutputObject {
+    owner: string;
+    amount: bigint;
+    reclaimDate: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UnpausedEvent {
+  export type InputTuple = [account: AddressLike];
+  export type OutputTuple = [account: string];
+  export interface OutputObject {
+    account: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -284,6 +392,12 @@ export interface CustomAirdrop1155Merkle extends BaseContract {
 
   owner: TypedContractMethod<[], [string], "view">;
 
+  pause: TypedContractMethod<[], [void], "nonpayable">;
+
+  paused: TypedContractMethod<[], [boolean], "view">;
+
+  reclaimUnclaimedTokens: TypedContractMethod<[], [void], "nonpayable">;
+
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   root: TypedContractMethod<[], [string], "view">;
@@ -295,6 +409,8 @@ export interface CustomAirdrop1155Merkle extends BaseContract {
     [void],
     "nonpayable"
   >;
+
+  unpause: TypedContractMethod<[], [void], "nonpayable">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
@@ -351,6 +467,15 @@ export interface CustomAirdrop1155Merkle extends BaseContract {
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "pause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "paused"
+  ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "reclaimUnclaimedTokens"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
@@ -362,7 +487,24 @@ export interface CustomAirdrop1155Merkle extends BaseContract {
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "unpause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
 
+  getEvent(
+    key: "AirdropPaused"
+  ): TypedContractEvent<
+    AirdropPausedEvent.InputTuple,
+    AirdropPausedEvent.OutputTuple,
+    AirdropPausedEvent.OutputObject
+  >;
+  getEvent(
+    key: "AirdropUnpaused"
+  ): TypedContractEvent<
+    AirdropUnpausedEvent.InputTuple,
+    AirdropUnpausedEvent.OutputTuple,
+    AirdropUnpausedEvent.OutputObject
+  >;
   getEvent(
     key: "Claim"
   ): TypedContractEvent<
@@ -371,14 +513,64 @@ export interface CustomAirdrop1155Merkle extends BaseContract {
     ClaimEvent.OutputObject
   >;
   getEvent(
+    key: "MerkleRootUpdated"
+  ): TypedContractEvent<
+    MerkleRootUpdatedEvent.InputTuple,
+    MerkleRootUpdatedEvent.OutputTuple,
+    MerkleRootUpdatedEvent.OutputObject
+  >;
+  getEvent(
     key: "OwnershipTransferred"
   ): TypedContractEvent<
     OwnershipTransferredEvent.InputTuple,
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
   >;
+  getEvent(
+    key: "Paused"
+  ): TypedContractEvent<
+    PausedEvent.InputTuple,
+    PausedEvent.OutputTuple,
+    PausedEvent.OutputObject
+  >;
+  getEvent(
+    key: "TokensReclaimed"
+  ): TypedContractEvent<
+    TokensReclaimedEvent.InputTuple,
+    TokensReclaimedEvent.OutputTuple,
+    TokensReclaimedEvent.OutputObject
+  >;
+  getEvent(
+    key: "Unpaused"
+  ): TypedContractEvent<
+    UnpausedEvent.InputTuple,
+    UnpausedEvent.OutputTuple,
+    UnpausedEvent.OutputObject
+  >;
 
   filters: {
+    "AirdropPaused(address)": TypedContractEvent<
+      AirdropPausedEvent.InputTuple,
+      AirdropPausedEvent.OutputTuple,
+      AirdropPausedEvent.OutputObject
+    >;
+    AirdropPaused: TypedContractEvent<
+      AirdropPausedEvent.InputTuple,
+      AirdropPausedEvent.OutputTuple,
+      AirdropPausedEvent.OutputObject
+    >;
+
+    "AirdropUnpaused(address)": TypedContractEvent<
+      AirdropUnpausedEvent.InputTuple,
+      AirdropUnpausedEvent.OutputTuple,
+      AirdropUnpausedEvent.OutputObject
+    >;
+    AirdropUnpaused: TypedContractEvent<
+      AirdropUnpausedEvent.InputTuple,
+      AirdropUnpausedEvent.OutputTuple,
+      AirdropUnpausedEvent.OutputObject
+    >;
+
     "Claim(address,uint256)": TypedContractEvent<
       ClaimEvent.InputTuple,
       ClaimEvent.OutputTuple,
@@ -390,6 +582,17 @@ export interface CustomAirdrop1155Merkle extends BaseContract {
       ClaimEvent.OutputObject
     >;
 
+    "MerkleRootUpdated(bytes32)": TypedContractEvent<
+      MerkleRootUpdatedEvent.InputTuple,
+      MerkleRootUpdatedEvent.OutputTuple,
+      MerkleRootUpdatedEvent.OutputObject
+    >;
+    MerkleRootUpdated: TypedContractEvent<
+      MerkleRootUpdatedEvent.InputTuple,
+      MerkleRootUpdatedEvent.OutputTuple,
+      MerkleRootUpdatedEvent.OutputObject
+    >;
+
     "OwnershipTransferred(address,address)": TypedContractEvent<
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
@@ -399,6 +602,39 @@ export interface CustomAirdrop1155Merkle extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
+    >;
+
+    "Paused(address)": TypedContractEvent<
+      PausedEvent.InputTuple,
+      PausedEvent.OutputTuple,
+      PausedEvent.OutputObject
+    >;
+    Paused: TypedContractEvent<
+      PausedEvent.InputTuple,
+      PausedEvent.OutputTuple,
+      PausedEvent.OutputObject
+    >;
+
+    "TokensReclaimed(address,uint256,uint256)": TypedContractEvent<
+      TokensReclaimedEvent.InputTuple,
+      TokensReclaimedEvent.OutputTuple,
+      TokensReclaimedEvent.OutputObject
+    >;
+    TokensReclaimed: TypedContractEvent<
+      TokensReclaimedEvent.InputTuple,
+      TokensReclaimedEvent.OutputTuple,
+      TokensReclaimedEvent.OutputObject
+    >;
+
+    "Unpaused(address)": TypedContractEvent<
+      UnpausedEvent.InputTuple,
+      UnpausedEvent.OutputTuple,
+      UnpausedEvent.OutputObject
+    >;
+    Unpaused: TypedContractEvent<
+      UnpausedEvent.InputTuple,
+      UnpausedEvent.OutputTuple,
+      UnpausedEvent.OutputObject
     >;
   };
 }
